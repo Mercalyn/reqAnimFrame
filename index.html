@@ -1,0 +1,119 @@
+<html>
+    <head>
+        <script type="text/javascript" src="jquery-1.10.2.min.js"></script>
+    </head>
+    <h1>Animating frames using HTML5's requestAnimationFrame</h1>
+    
+    <h2>Type in or select your desired speed value: (negative values work also)</h2>
+    <input type="number" value="3" id="speed" />
+    <h2>Use the WASD keys to move the orange square!</h2>
+    
+    <div></div>
+
+    <style>
+        div {
+          position:relative;
+          left:100px;
+          top:100px;
+          width: 50px;
+          height: 50px;
+          background: orange;
+          float: left;
+        }
+
+        button {
+          position: relative;
+          top: 20px;
+          left: 20px;
+        }
+        h2,h1,p{
+            font-family: arial;
+            font-weight: 100;
+        }
+    </style>
+
+    <script>
+        //frameID is the actual animation stored as a variable
+        var frameIDLeft;
+        var frameIDRight;
+        var frameIDUp;
+        var frameIDDown;
+        //default distance, which to the end user is known as speed
+        var distance = 3;
+        //keyIsUp lets you hold a key down and not get the repeat effect until it keyup
+        var keyLeftIsUp = true;
+        var keyRightIsUp = true;
+        var keyUpIsUp = true;
+        var keyDownIsUp = true;
+        
+        
+        //check input and assign the value into speed aka distance
+        $("#speed").keyup(function(){
+            distance = $(this).val();
+        });
+        $("#speed").click(function(){
+            distance = $(this).val();
+        });
+
+        
+        //animating frames go here
+        function drawFrameLeft() {
+          $("div").css( "left", "-=" + distance );
+          frameIDLeft = requestAnimationFrame(drawFrameLeft);
+        };
+        function drawFrameRight() {
+          $("div").css( "left", "+=" + distance );
+          frameIDRight = requestAnimationFrame(drawFrameRight);
+        };
+        function drawFrameUp() {
+          $("div").css( "top", "-=" + distance );
+          frameIDUp = requestAnimationFrame(drawFrameUp);
+        };
+        function drawFrameDown() {
+          $("div").css( "top", "+=" + distance );
+          frameIDDown = requestAnimationFrame(drawFrameDown);
+        };
+
+        
+        //keydown events
+        $("body").keydown(function(event) {
+            if (event.which == 65 && keyLeftIsUp) {
+                keyLeftIsUp = false;
+                frameIDLeft = requestAnimationFrame(drawFrameLeft);
+            }
+            else if (event.which == 68 && keyRightIsUp) {
+                keyRightIsUp = false;
+                frameIDRight = requestAnimationFrame(drawFrameRight);
+            }
+            else if (event.which == 87 && keyUpIsUp) {
+                keyUpIsUp = false;
+                frameIDUp = requestAnimationFrame(drawFrameUp);
+            }
+            else if (event.which == 83 && keyDownIsUp) {
+                keyDownIsUp = false;
+                frameIDDown = requestAnimationFrame(drawFrameDown);
+            }
+        });
+        
+        
+        //keyup events
+        $("body").keyup(function(event) {
+            if (event.which == 65) {
+                cancelAnimationFrame(frameIDLeft);
+                keyLeftIsUp = true;
+            }
+           else if (event.which == 68) {
+                cancelAnimationFrame(frameIDRight);
+                keyRightIsUp = true;
+            }
+            else if (event.which == 87) {
+                cancelAnimationFrame(frameIDUp);
+                keyUpIsUp = true;
+            }
+            else if (event.which == 83) {
+                cancelAnimationFrame(frameIDDown);
+                keyDownIsUp = true;
+            }
+        });
+    </script>
+</html>
